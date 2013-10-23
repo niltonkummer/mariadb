@@ -4819,6 +4819,10 @@ exit:
 //
 int ha_tokudb::read_full_row(uchar * buf) {
     TOKUDB_DBUG_ENTER("ha_tokudb::read_full_row");
+
+    uint64_t delay = THDVAR(ha_thd(), read_full_row_delay);
+    if (delay) usleep(delay);
+
     int error = 0;
     struct smart_dbt_info info;
     info.ha = this;
@@ -4842,7 +4846,10 @@ int ha_tokudb::read_full_row(uchar * buf) {
             error = HA_ERR_LOCK_WAIT_TIMEOUT;
         }
         table->status = STATUS_NOT_FOUND;
-        TOKUDB_DBUG_RETURN(error == DB_NOTFOUND ? HA_ERR_CRASHED : error);
+        if (error == DB_NOTFOUND) {
+            error = HA_ERR_CRASHED;
+            fprintf(stderr, "ha_tokudb::%s %u HA_ERR_CRASHED %u\n", __FUNCTION__, __LINE__, cursor_flags);
+        }
     }
 
     TOKUDB_DBUG_RETURN(error);

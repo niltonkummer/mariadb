@@ -129,6 +129,8 @@ bool get_disable_slow_upsert(THD *thd);
 #endif
 uint get_analyze_time(THD *thd);
 
+static MYSQL_THDVAR_ULONGLONG(read_full_row_delay, 0, "TokuDB read full row delay", NULL, NULL, 0 /*default*/, 0 /*min*/, ~0ULL /*max*/,1 /*blocksize*/);
+
 extern HASH tokudb_open_tables;
 extern pthread_mutex_t tokudb_mutex;
 extern pthread_mutex_t tokudb_meta_mutex;

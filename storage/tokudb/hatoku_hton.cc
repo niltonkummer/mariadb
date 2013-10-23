@@ -2066,6 +2066,7 @@ static struct st_mysql_sys_var *tokudb_system_variables[] = {
     MYSQL_SYSVAR(fsync_log_period),
     MYSQL_SYSVAR(gdb_path),
     MYSQL_SYSVAR(gdb_on_fatal),
+    MYSQL_SYSVAR(read_full_row_delay),
     NULL
 };
 

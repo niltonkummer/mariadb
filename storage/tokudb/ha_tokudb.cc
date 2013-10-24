@@ -4848,7 +4848,16 @@ int ha_tokudb::read_full_row(uchar * buf) {
         table->status = STATUS_NOT_FOUND;
         if (error == DB_NOTFOUND) {
             error = HA_ERR_CRASHED;
-            fprintf(stderr, "ha_tokudb::%s %u HA_ERR_CRASHED %u\n", __FUNCTION__, __LINE__, cursor_flags);
+            time_t now = time(0);
+            char tstr[26];
+            ctime_r(&now, tstr);
+            fprintf(stderr, "%.24s ha_tokudb::%s:%u HA_ERR_CRASHED transaction=%p cursor_flags=%u\n", tstr, __FUNCTION__, __LINE__, transaction, cursor_flags);
+            if (transaction) {
+                if (transaction->parent) {
+                    transaction->parent->print(transaction->parent, stderr);
+                }
+                transaction->print(transaction, stderr);
+            }
         }
     }
 

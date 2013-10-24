@@ -566,6 +566,7 @@ static void print_db_txn_struct (void) {
 	"int (*abort_with_progress)(DB_TXN*, TXN_PROGRESS_POLL_FUNCTION, void*)",
 	"int (*xa_prepare) (DB_TXN*, TOKU_XA_XID *)",
     "uint64_t (*id64) (DB_TXN*)",
+        "void (*print)(DB_TXN *, FILE *)",
 	NULL};
     sort_and_dump_fields("db_txn", false, extra);
 }

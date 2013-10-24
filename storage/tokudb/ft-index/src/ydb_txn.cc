@@ -392,6 +392,11 @@ locked_txn_abort(DB_TXN *txn) {
     return r;
 }
 
+static void toku_txn_print(DB_TXN *txn, FILE *outfile) {
+    struct __toku_db_txn_internal *txni = db_txn_struct_i(txn);
+    fprintf(outfile, "txn=%p parent=%p child=%p flags=%u iso=%u\n", txn, txn->parent, txni->child, txni->flags, txni->iso);
+}
+
 static inline void
 txn_func_init(DB_TXN *txn) {
 #define STXN(name) txn->name = locked_txn_ ## name
@@ -404,6 +409,7 @@ txn_func_init(DB_TXN *txn) {
 #define SUTXN(name) txn->name = toku_txn_ ## name
     SUTXN(prepare);
     SUTXN(xa_prepare);
+    SUTXN(print);
 #undef SUTXN
     txn->id = toku_txn_id;
     txn->id64 = toku_txn_id64;
